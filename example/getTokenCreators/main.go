@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	apiKey := "bags_prod_26FR3e65UBNfJL6KnkgNqQQo_SIGM-ZrOLJvmEfqtu4"
+	apiKey := "your-api-key"
 	client, err := bags.New(apiKey, nil)
 	if err != nil {
 		log.Fatalf("failed to create bags client: %s", err)
