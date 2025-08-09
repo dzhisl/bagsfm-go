@@ -10,7 +10,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"path"
 	"strings"
 	"time"
 )
@@ -94,9 +93,17 @@ func (c *BagsClient) newRequest(ctx context.Context, method, relPath string, bod
 	if err != nil {
 		return nil, fmt.Errorf("parse base URL: %w", err)
 	}
-	base.Path = path.Join(strings.TrimSuffix(base.Path, "/"), relPath)
 
-	req, err := http.NewRequestWithContext(ctx, method, base.String(), body)
+	// Parse the relative path to handle query params and fragments properly
+	rel, err := url.Parse(relPath)
+	if err != nil {
+		return nil, fmt.Errorf("parse relative path: %w", err)
+	}
+
+	// Use ResolveReference to properly combine URLs
+	fullURL := base.ResolveReference(rel)
+
+	req, err := http.NewRequestWithContext(ctx, method, fullURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -111,6 +118,7 @@ func (c *BagsClient) newRequest(ctx context.Context, method, relPath string, bod
 	}
 	return req, nil
 }
+
 func (c *BagsClient) do(req *http.Request, v any) error {
 	res, err := c.HTTP.Do(req)
 	if err != nil {
