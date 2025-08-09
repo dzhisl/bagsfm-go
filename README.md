@@ -125,7 +125,6 @@ for _, c := range creators {
 - All requests must include your API key via `x-api-key` header.
 - The default base URL is `https://public-api-v2.bags.fm/api/v1/`, as per Bags API versioning.
 - Docs highlight rate limiting at **1,000 requests per hour**, so consider implementing exponential backoff.
-  ([docs.bags.fm][1])
 
 ---
 
